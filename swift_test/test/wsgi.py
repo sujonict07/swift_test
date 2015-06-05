@@ -107,12 +107,12 @@ def loadapp(conf_file, global_conf=None, relative_to='.', name=None, allow_modif
     """
     global_conf = global_conf or {}
     ctx = loadwsgi.loadcontext(loadwsgi.APP, conf_file, name=name, relative_to=relative_to, global_conf=global_conf)
-    # if ctx.object_type.name == 'pipeline':
-    #     # give app the opportunity to modify the pipeline context
-    #     app = ctx.app_context.create()
-    #     func = getattr(app, 'modify_wsgi_pipeline', None)
-    #     if func and allow_modify_pipeline:
-    #         func(PipelineWrapper(ctx))
+    if ctx.object_type.name == 'pipeline':
+         # give app the opportunity to modify the pipeline context
+         app = ctx.app_context.create()
+         func = getattr(app, 'modify_wsgi_pipeline', None)
+         if func and allow_modify_pipeline:
+            func(PipelineWrapper(ctx))
     return ctx.create()
 
 if __name__ == '__main__':
